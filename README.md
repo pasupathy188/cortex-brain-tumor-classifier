@@ -46,6 +46,50 @@ Stage 2 attempted full fine-tuning of the base model, which underperformed
 Stage 1 due to overfitting on a relatively small dataset (5,600 training
 images), so the Stage 1 weights were kept as the final model.
 
+![Training accuracy and loss across both stages (Stage 1: 15 epochs, Stage 2: 10 epochs)](docs/screenshots/training_history.png)
+
+<details>
+<summary><strong>Full training log (all 25 epochs, click to expand)</strong></summary>
+
+```
+============================================================
+STAGE 1: Training Classification Head (Base Frozen)
+============================================================
+Epoch 1/15  - accuracy: 0.7498 - loss: 0.6369 - val_accuracy: 0.8027 - val_loss: 0.5189
+Epoch 2/15  - accuracy: 0.8254 - loss: 0.4570 - val_accuracy: 0.8313 - val_loss: 0.4354
+Epoch 3/15  - accuracy: 0.8587 - loss: 0.3726 - val_accuracy: 0.8571 - val_loss: 0.3812
+Epoch 4/15  - accuracy: 0.8703 - loss: 0.3406 - val_accuracy: 0.8661 - val_loss: 0.3629
+Epoch 5/15  - accuracy: 0.8955 - loss: 0.2829 - val_accuracy: 0.8750 - val_loss: 0.3412
+Epoch 6/15  - accuracy: 0.8987 - loss: 0.2681 - val_accuracy: 0.8848 - val_loss: 0.3151
+Epoch 7/15  - accuracy: 0.9036 - loss: 0.2337 - val_accuracy: 0.8813 - val_loss: 0.3203
+Epoch 8/15  - accuracy: 0.9196 - loss: 0.2062 - val_accuracy: 0.8643 - val_loss: 0.3843
+Epoch 9/15  - accuracy: 0.9187 - loss: 0.2058 - val_accuracy: 0.8857 - val_loss: 0.3502
+Epoch 10/15 - accuracy: 0.9266 - loss: 0.1844 - val_accuracy: 0.8696 - val_loss: 0.3853
+Epoch 11/15 - accuracy: 0.9335 - loss: 0.1790 - val_accuracy: 0.8911 - val_loss: 0.3390  <- best epoch
+Epoch 12/15 - accuracy: 0.9507 - loss: 0.1332 - val_accuracy: 0.8866 - val_loss: 0.3572
+Epoch 13/15 - accuracy: 0.9500 - loss: 0.1370 - val_accuracy: 0.8866 - val_loss: 0.3292
+Epoch 14/15 - accuracy: 0.9574 - loss: 0.1182 - val_accuracy: 0.8839 - val_loss: 0.3680
+Epoch 15/15 - accuracy: 0.9554 - loss: 0.1172 - val_accuracy: 0.8813 - val_loss: 0.3373
+Restoring model weights from the end of the best epoch: 6.
+
+============================================================
+STAGE 2: Fine-tuning Entire Model (Base Unfrozen)
+============================================================
+Epoch 1/10  - accuracy: 0.6717 - loss: 0.9249 - val_accuracy: 0.7991 - val_loss: 0.5823
+Epoch 2/10  - accuracy: 0.7991 - loss: 0.5652 - val_accuracy: 0.7411 - val_loss: 0.7503
+Epoch 3/10  - accuracy: 0.8384 - loss: 0.4325 - val_accuracy: 0.7563 - val_loss: 0.7000
+Epoch 4/10  - accuracy: 0.8661 - loss: 0.3508 - val_accuracy: 0.7652 - val_loss: 0.6388
+Epoch 5/10  - accuracy: 0.8819 - loss: 0.3097 - val_accuracy: 0.7964 - val_loss: 0.5817
+Epoch 6/10  - accuracy: 0.8933 - loss: 0.2728 - val_accuracy: 0.8205 - val_loss: 0.5295
+Epoch 7/10  - accuracy: 0.9105 - loss: 0.2308 - val_accuracy: 0.8304 - val_loss: 0.5093
+Epoch 8/10  - accuracy: 0.9194 - loss: 0.2106 - val_accuracy: 0.8384 - val_loss: 0.5042
+Epoch 9/10  - accuracy: 0.9319 - loss: 0.1817 - val_accuracy: 0.8330 - val_loss: 0.5034
+Epoch 10/10 - accuracy: 0.9451 - loss: 0.1537 - val_accuracy: 0.8420 - val_loss: 0.4977  <- best epoch
+Restoring model weights from the end of the best epoch: 10.
+```
+
+</details>
+
 ## Features
 
 - 🔍 **Predict** — drag-and-drop MRI upload with instant per-class confidence breakdown
