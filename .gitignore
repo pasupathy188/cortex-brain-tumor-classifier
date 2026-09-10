@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+history.json
+static/history_images/*
+!static/history_images/.gitkeep
+.DS_Store
+Thumbs.db
+.vscode/

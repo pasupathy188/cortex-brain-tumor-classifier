@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cortex — Brain Tumor MRI Classifier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">◈</span>
+      <span class="brand-name">Cortex</span>
+    </div>
+    <p class="brand-tagline">MRI classification console</p>
+
+    <nav class="nav">
+      <button class="nav-item is-active" data-view="predict">
+        <span class="nav-dot"></span> Predict
+      </button>
+      <button class="nav-item" data-view="history">
+        <span class="nav-dot"></span> Recent history
+      </button>
+      <button class="nav-item" data-view="performance">
+        <span class="nav-dot"></span> Model performance
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="status-line">
+        <span class="status-dot"></span>
+        <span>Model loaded</span>
+      </div>
+      <div class="status-meta">EfficientNetB0 · 4 classes</div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- PREDICT VIEW -->
+    <section class="view is-active" id="view-predict">
+      <header class="view-header">
+        <h1>Predict</h1>
+        <p>Upload a brain MRI scan to classify it into one of four categories.</p>
+      </header>
+
+      <div class="predict-grid">
+        <div class="panel upload-panel">
+          <div class="dropzone" id="dropzone">
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <div id="dropzoneEmpty" class="dropzone-empty">
+              <span class="dropzone-icon">⤒</span>
+              <p>Drop an MRI scan here</p>
+              <p class="dropzone-sub">or click to browse · JPG / PNG</p>
+            </div>
+            <img id="previewImage" class="preview-image" hidden>
+          </div>
+          <button id="analyzeBtn" class="btn btn-primary" disabled>Analyze scan</button>
+        </div>
+
+        <div class="panel result-panel">
+          <div id="resultEmpty" class="result-empty">
+            <p>Results will appear here once a scan is analyzed.</p>
+          </div>
+
+          <div id="resultContent" class="result-content" hidden>
+            <div class="result-headline">
+              <span class="result-label" id="resultLabel">—</span>
+              <span class="result-confidence" id="resultConfidence">—</span>
+            </div>
+            <div class="bars" id="bars"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY VIEW -->
+    <section class="view" id="view-history">
+      <header class="view-header">
+        <h1>Recent history</h1>
+        <p>Every scan analyzed in this session is logged here, most recent first.</p>
+      </header>
+
+      <div class="history-toolbar">
+        <button id="refreshHistoryBtn" class="btn btn-ghost">Refresh</button>
+        <button id="clearHistoryBtn" class="btn btn-ghost btn-danger">Clear history</button>
+      </div>
+
+      <div class="history-grid" id="historyGrid">
+        <p class="empty-note">No predictions yet.</p>
+      </div>
+    </section>
+
+    <!-- PERFORMANCE VIEW -->
+    <section class="view" id="view-performance">
+      <header class="view-header">
+        <h1>Model performance</h1>
+        <p>Metrics from the held-out test set (1,600 images, never seen during training).</p>
+      </header>
+
+      <div class="perf-grid">
+        <div class="panel accuracy-panel">
+          <span class="accuracy-number" id="accuracyNumber">—</span>
+          <span class="accuracy-label">Overall test accuracy</span>
+        </div>
+
+        <div class="panel cm-panel">
+          <h3>Confusion matrix</h3>
+          <div id="cmContainer"><p class="empty-note">No confusion matrix image found.</p></div>
+        </div>
+      </div>
+
+      <div class="panel report-panel">
+        <h3>Precision · Recall · F1-score by class</h3>
+        <table class="report-table" id="reportTable">
+          <thead>
+            <tr><th>Class</th><th>Precision</th><th>Recall</th><th>F1-score</th><th>Support</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

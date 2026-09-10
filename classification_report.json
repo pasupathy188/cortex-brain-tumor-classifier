@@ -1,0 +1,9 @@
+{
+  "Glioma":          {"precision": 0.8746, "recall": 0.6975, "f1-score": 0.7761, "support": 400},
+  "Meningioma":      {"precision": 0.7775, "recall": 0.7600, "f1-score": 0.7686, "support": 400},
+  "Pituitary Tumor": {"precision": 0.8455, "recall": 0.9850, "f1-score": 0.9099, "support": 400},
+  "No Tumor":        {"precision": 0.9151, "recall": 0.9700, "f1-score": 0.9417, "support": 400},
+  "accuracy": 0.8531,
+  "macro avg":    {"precision": 0.8532, "recall": 0.8531, "f1-score": 0.8491, "support": 1600},
+  "weighted avg": {"precision": 0.8532, "recall": 0.8531, "f1-score": 0.8491, "support": 1600}
+}
