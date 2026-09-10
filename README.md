@@ -1,70 +1,136 @@
-# Cortex — Brain Tumor MRI Classifier (Local Web App)
+# 🧠 Cortex — Brain Tumor MRI Classifier
 
-A local-hosted dashboard for your brain tumor MRI classifier: live prediction,
-persistent history, and model performance metrics — no Colab, no Gradio,
-no internet dependency once set up.
+[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.20-orange?logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.x-black?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Test Accuracy](https://img.shields.io/badge/Test%20Accuracy-85.31%25-brightgreen)](#model-performance)
+[![License](https://img.shields.io/badge/License-Educational%20Use-lightgrey)](#license)
 
-## Setup
+A locally-hosted diagnostic dashboard that classifies brain MRI scans into
+**Glioma**, **Meningioma**, **Pituitary Tumor**, or **No Tumor** using
+transfer learning on EfficientNetB0. Built end-to-end: dataset pipeline,
+two-stage training, full evaluation, and a custom clinical-console web UI
+— no cloud dependency, runs entirely on your own machine.
 
-1. **Install dependencies** (Python 3.9–3.12 recommended):
-   ```
-   pip install -r requirements.txt
-   ```
+> ⚠️ **Educational/demonstration project only.** This is not a certified
+> medical device and must never be used for actual clinical diagnosis.
 
-2. **Add your trained model.** Copy `best_model_final.keras` from your Google
-   Drive (`BrainTumor_Models/best_model_final.keras`) into this same folder,
-   right next to `app.py`.
+---
 
-3. **(Optional) Add your confusion matrix image.** If you have
-   `confusion_matrix_final.png` from the evaluation script, drop it into the
-   `static/` folder. It'll automatically appear on the Performance tab. If
-   you skip this, the tab still works — it just won't show the image.
+## Screenshot
 
-4. **(Optional) Update classification_report.json.** A copy with your
-   already-verified metrics (85.31% accuracy) is included. If you re-run
-   `full_evaluation.py` later and get a new `classification_report.json`,
-   just replace this file with that one.
+![Model performance dashboard](docs/screenshots/performance.png)
 
-## Run it
+---
 
+## Model Performance
+
+Evaluated on a held-out test set of 1,600 MRI images (never seen during
+training):
+
+| Class | Precision | Recall | F1-score | Support |
+|---|---|---|---|---|
+| Glioma | 0.8746 | 0.6975 | 0.7761 | 400 |
+| Meningioma | 0.7775 | 0.7600 | 0.7686 | 400 |
+| Pituitary Tumor | 0.8455 | 0.9850 | 0.9099 | 400 |
+| No Tumor | 0.9151 | 0.9700 | 0.9417 | 400 |
+| **Overall accuracy** | | | **85.31%** | 1600 |
+
+**Architecture:** EfficientNetB0 (ImageNet pretrained) → GlobalAveragePooling2D
+→ Dense(256, ReLU) → Dropout(0.3) → Dense(128, ReLU) → Dropout(0.2) →
+Dense(4, Softmax)
+
+**Training:** Two-stage transfer learning — Stage 1 trains only the
+classification head with the base frozen (89.11% peak validation accuracy);
+Stage 2 attempted full fine-tuning of the base model, which underperformed
+Stage 1 due to overfitting on a relatively small dataset (5,600 training
+images), so the Stage 1 weights were kept as the final model.
+
+## Features
+
+- 🔍 **Predict** — drag-and-drop MRI upload with instant per-class confidence breakdown
+- 📜 **Recent History** — every prediction is logged locally (image + result), persists across app restarts
+- 📊 **Model Performance** — confusion matrix and full precision/recall/F1 breakdown, always visible
+- 🖥️ **Fully local** — no cloud API calls, no internet dependency once installed, runs on `localhost`
+
+## Tech Stack
+
+- **Model:** TensorFlow / Keras, EfficientNetB0 transfer learning
+- **Backend:** Flask
+- **Frontend:** Vanilla HTML/CSS/JS (custom-designed clinical console UI)
+- **Data:** [Brain Tumor MRI Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset) (Kaggle), 7,200 images across 4 classes
+
+## Getting Started
+
+### Prerequisites
+
+- Python **3.11 or 3.12** (TensorFlow does not yet support 3.13+)
+- ~2GB free disk space (for dependencies)
+
+### Installation
+
+```bash
+git clone https://github.com/pasupathy188/cortex-brain-tumor-classifier.git
+cd cortex-brain-tumor-classifier
+
+python -m venv venv
+venv\Scripts\activate        # Windows
+# source venv/bin/activate   # macOS/Linux
+
+pip install -r requirements.txt
 ```
+
+### Run
+
+```bash
 python app.py
 ```
 
-Then open **http://localhost:5000** in your browser.
+Open **http://localhost:5000** in your browser.
 
-## What's inside
-
-- **Predict tab** — drag and drop or click to upload an MRI scan; get an
-  instant classification with a confidence breakdown across all four classes.
-- **Recent history tab** — every scan you analyze is saved (image + result)
-  to a local `history.json` file and `static/history_images/` folder, so it
-  persists even after closing the app. Clear it anytime with one click.
-- **Model performance tab** — your test accuracy, confusion matrix, and full
-  precision/recall/F1 breakdown per class, all in one place — ready to
-  screenshot for a report or presentation.
-
-## Folder structure
+## Project Structure
 
 ```
-brain_tumor_webapp/
-├── app.py                        # Flask backend
-├── best_model_final.keras        # <- you add this
-├── classification_report.json    # pre-filled with your verified results
+cortex-brain-tumor-classifier/
+├── app.py                        # Flask backend + inference API
+├── best_model_final.keras        # Trained model (85.31% test accuracy)
+├── classification_report.json    # Precision/recall/F1 per class
 ├── requirements.txt
-├── history.json                  # created automatically on first prediction
 ├── templates/
-│   └── index.html
+│   └── index.html                # Dashboard shell
 └── static/
-    ├── css/style.css
-    ├── js/script.js
-    ├── history_images/           # saved scan thumbnails
-    └── confusion_matrix_final.png  # <- you add this (optional)
+    ├── css/style.css             # Clinical console styling
+    ├── js/script.js               # Frontend logic
+    ├── confusion_matrix_final.png
+    └── history_images/            # Saved scan thumbnails (generated at runtime)
 ```
 
-## Notes
+## How It Was Built
 
-- This is a **local single-user tool** — it's not hardened for public
-  deployment (no auth, no rate limiting). Keep it on `localhost` unless you
-  specifically set up proper security for a shared deployment.
-- Educational/demonstration use only — not a medical diagnostic device.
+1. **Data pipeline** — `tf.keras.utils.image_dataset_from_directory` with
+   stratified train/validation split, on-the-fly augmentation (flip,
+   rotation, zoom, translation)
+2. **Transfer learning** — EfficientNetB0 base frozen initially, custom
+   classification head trained first (Stage 1), then selectively evaluated
+   against a full fine-tune (Stage 2) — Stage 1 won on held-out test accuracy
+3. **Evaluation** — confusion matrix, per-class precision/recall/F1 via
+   scikit-learn, generalization spot-checked against out-of-distribution
+   sample images
+4. **Deployment** — packaged as a local Flask app with a purpose-built
+   dashboard UI, replacing an earlier Gradio prototype for a more polished,
+   offline-capable result
+
+## Known Limitations
+
+- Trained on a single public dataset; accuracy on scans from different
+  scanners/institutions/preprocessing pipelines may vary (see [Known
+  Limitations](#known-limitations) testing notes below)
+- Glioma and Meningioma are the most visually similar classes and show the
+  lowest recall (69.75% and 76.00% respectively) — the model most often
+  confuses these two with each other
+- No rejection/"not a brain MRI" class — the model will still output one of
+  the four classes even for unrelated input images
+
+## License
+
+Educational/academic use. Not for clinical or commercial deployment.
