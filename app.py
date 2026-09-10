@@ -1,14 +1,4 @@
-# ============================================================
-# BRAIN TUMOR MRI CLASSIFIER - LOCAL WEB APP (Flask backend)
-#
-# Run locally on your own machine (requires Python + TensorFlow
-# installed locally - this does NOT run inside Colab).
-#
-# Setup:
-#   pip install flask tensorflow pillow numpy
-#   python app.py
-# Then open: http://localhost:5000
-# ============================================================
+
 
 import os
 import json
